@@ -1,27 +1,25 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const morgan = require('morgan');
 
 const planetsRouter = require('./routes/planets/planets.router');
 
 const app = express();
 
-const whitelist = ['http://localhost:3000', 'http://localhost:8000'];
-
 // Middlewares
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (whitelist.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin:
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'http://localhost:8000',
   })
 );
+app.use(morgan('combined'));
+
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Routes Middlewares
 app.use(planetsRouter);
