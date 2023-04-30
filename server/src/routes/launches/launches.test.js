@@ -10,7 +10,7 @@ describe('Launches API', () => {
   describe('Test GET /launches', () => {
     it('Should responde with 200 success', async () => {
       await request(app)
-        .get('/launches')
+        .get('/v1/launches')
         .send()
         .expect('Content-Type', /json/)
         .expect(200);
@@ -28,7 +28,7 @@ describe('Launches API', () => {
 
     it('Should respond with 200 success', async () => {
       const response = await request(app)
-        .post('/launches')
+        .post('/v1/launches')
         .send(completeLaunch)
         .expect('Content-Type', /json/)
         .expect(201);
@@ -45,7 +45,7 @@ describe('Launches API', () => {
     it('Should catch missing required property', async () => {
       delete completeLaunch.launchDate;
       const response = await request(app)
-        .post('/launches')
+        .post('/v1/launches')
         .send(completeLaunch)
         .expect(400);
 
@@ -57,7 +57,7 @@ describe('Launches API', () => {
     it('Should catch invalid dates', async () => {
       completeLaunch.launchDate = 'zoot';
       const response = await request(app)
-        .post('/launches')
+        .post('/v1/launches')
         .send(completeLaunch)
         .expect(400);
 
