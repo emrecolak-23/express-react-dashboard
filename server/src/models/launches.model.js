@@ -1,4 +1,4 @@
-// const launches = require('./launches.schema');
+const launchesDatabase = require('./launches.schema');
 
 const launches = new Map();
 
@@ -15,10 +15,27 @@ const launch = {
   success: true,
 };
 
-launches.set(launch.flightNumber, launch);
+saveLaunch(launch);
 
-function getAllLaunches() {
-  return Array.from(launches.values());
+async function saveLaunch(launch) {
+  await launchesDatabase.updateOne(
+    {
+      flightNumber: launch.flightNumber,
+    },
+    launch,
+    {
+      upsert: true,
+    }
+  );
+}
+
+async function getAllLaunches() {
+  return await launchesDatabase.find(
+    {},
+    {
+      __v: 0,
+    }
+  );
 }
 
 function addNewLaunch(launch) {
